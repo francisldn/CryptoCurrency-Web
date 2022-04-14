@@ -43,6 +43,16 @@ const useStyles = makeStyles({
     }
 })
 
+export const convertNumber = (value) => {
+    return Number(value) >= 1.0e+9
+    ? (Number(value)/ 1.0e+9).toFixed(2) + "B"
+    : Number(value) >= 1.0e+6
+    ? (Number(value)/ 1.0e+6).toFixed(2) + "M"
+    : Number(value)>= 1.0e+3
+    ? (Number(value)/ 1.0e+3).toFixed(2) + "K"
+    : Number(value).toLocaleString()
+}
+
 
 const CoinTable = () => {
     const [coins, setCoins] = useState([]);
@@ -82,15 +92,7 @@ const CoinTable = () => {
         ))
     }
 
-    const convertNumber = (value) => {
-        return Number(value) >= 1.0e+9
-        ? (Number(value)/ 1.0e+9).toFixed(2) + "B"
-        : Number(value) >= 1.0e+6
-        ? (Number(value)/ 1.0e+6).toFixed(2) + "M"
-        : Number(value)>= 1.0e+3
-        ? (Number(value)/ 1.0e+3).toFixed(2) + "K"
-        : Number(value).toLocaleString()
-    }
+    
 
     return (
     <ThemeProvider theme={darkTheme}> 
