@@ -3,9 +3,11 @@ import {useParams} from 'react-router-dom';
 import {CryptoState} from '../CryptoContext';
 import {SingleCoin} from '../config/api';
 import axios from 'axios';
-import { makeStyles, Typography, LinearProgress } from '@material-ui/core';
+import { makeStyles, Typography, LinearProgress, Button } from '@material-ui/core';
 import CoinInfo from '../component/CoinInfo';
 import {convertNumber} from '../component/CoinTable';
+import { db } from '../firebase';
+import { doc,setDoc } from 'firebase/firestore';
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -65,6 +67,16 @@ const useStyles = makeStyles((theme) => ({
         [theme.breakpoints.down("xs")]: {
             alignItems:"start",
         }
+    },
+    watchlist: {
+        width: "100%",
+        height: 40,
+        color:"black",
+        backgroundColor: "gold",
+        cursor:"pointer",
+        "&:hover": {
+            backgroundColor:"lightblue",
+        }
     }
 
 }))
@@ -79,7 +91,8 @@ const Coinpage = () => {
     const [coinRank, setCoinRank] = useState();
     const [coinPrice, setCoinPrice] = useState();
     const [coinMktCap, setCoinMktCap] = useState();
-    const {currency, symbol} = CryptoState();
+    const {currency, symbol, user, setAlert, watchlist, removeFromWatchList} = CryptoState();
+     
 
     // function to remove html tags
     function removeTags(str) {
@@ -100,9 +113,41 @@ const Coinpage = () => {
 
     const classes = useStyles();
 
+    
+
     useEffect(() => {
         fetchCoin();
     },[currency]);
+
+    const inWatchList = watchlist.includes(id)
+
+    // create an instance of the coin list (coinRef) from db using 'doc' function
+    // then update coinRef then write to database using setDoc
+    const addToWatchList = async () => {
+        // locate the coin instance in the database
+        const coinRef = doc(db, "watchlist", user.uid)
+        try{
+            // update the coin instance in database
+            await setDoc(coinRef, {
+                // if existing watchlist = true, add coin.id
+                coins: watchlist ? [...watchlist, id]: [id]
+            })
+            setAlert({
+                open:true,
+                message: `${coin.name} added to the watchlist`,
+                type: "success",
+            });
+        } catch(error) {
+            setAlert({
+                open:true,
+                message:error.message,
+                type: "error",
+            })
+        }
+    }
+
+    //removeCoinFromWatchList is moved to CryptoContext
+    
 
     if(!coin) return <LinearProgress />
 
@@ -159,6 +204,18 @@ const Coinpage = () => {
                         fontWeight:"bold",
                         marginRight:5,}}>Market Cap:</span> {` ${symbol} ${convertNumber(coinMktCap)}`}
                 </Typography>
+                {user && (
+                    <Button
+                        variant="outlined"
+                        className={classes.watchlist}
+                        style={{
+                            backgroundColor: inWatchList? "#ff0000": classes.watchlist.backgroundColor,
+                        }}
+                        onClick={inWatchList? () => removeFromWatchList(id): addToWatchList}
+                    >
+                        {inWatchList? "Remove from Watchlist": "Add to Watchlist"}
+                    </Button>
+                )}
             </div>
         </div>
         <CoinInfo coin={coin}/>

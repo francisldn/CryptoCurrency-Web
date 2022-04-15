@@ -3,6 +3,8 @@ import { AppBar, Container, Toolbar, Typography, Select, MenuItem } from '@mater
 import { makeStyles, createTheme, ThemeProvider } from '@material-ui/core';
 import {useNavigate} from 'react-router-dom';
 import {CryptoState} from '../CryptoContext'
+import {AuthModal} from './Authentication/AuthModal';
+import UserSideBar from './Authentication/UserSideBar';
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -18,7 +20,7 @@ const Header = () => {
     
     const classes = useStyles();
     const history = useNavigate();
-    const {currency,setCurrency} = CryptoState()
+    const {currency,setCurrency, user} = CryptoState()
     const darkTheme = createTheme({
         palette: {
             primary: {
@@ -48,6 +50,7 @@ const Header = () => {
                     <MenuItem value={"USD"}>USD</MenuItem>
                     <MenuItem value={"GBP"}>GBP</MenuItem>
                 </Select>
+                {user ? <UserSideBar/>: <AuthModal />}
             </Toolbar>
         </Container>
     </AppBar>

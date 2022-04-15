@@ -6,7 +6,7 @@ import Homepage from './Pages/Homepage';
 import Coinpage from './Pages/Coinpage';
 import React from 'react'
 import {makeStyles} from '@material-ui/core';
-
+import Alert from './component/Alert';
 
 function App() {
 
@@ -32,7 +32,9 @@ function App() {
               <Route path='/coins/:id' element={<Coinpage />} />
             </Routes>
         </div>  
+        <Alert />
       </BrowserRouter>
+      
 
   );
 }

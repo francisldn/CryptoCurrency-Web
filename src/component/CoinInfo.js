@@ -5,9 +5,9 @@ import {useParams} from 'react-router-dom';
 import axios from 'axios';
 import { createTheme, ThemeProvider, makeStyles, CircularProgress } from '@material-ui/core';
 import {Line} from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
 import {chartDays} from '../config/data'
 import SelectButton from './SelectButton'
+import Chart from 'chart.js/auto';
 
 const useStyles = makeStyles((theme) => ({
     container: {
