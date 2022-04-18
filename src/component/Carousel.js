@@ -6,13 +6,22 @@ import AliceCarousel from 'react-alice-carousel';
 import {Link} from 'react-router-dom';
 import { makeStyles, Typography } from '@material-ui/core';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
 
     carouselText: {
         color: "white",
         display:"flex",
         alignItems: "center",
         marginLeft: 15,
+    },
+    topten: {
+        display: "flex",
+        flexDirection:"column",
+        alignItems: "center",
+        cursor:"pointer",
+        [theme.breakpoints.down("md")]: {
+            display: "none",
+        }
     }
 
 }))
@@ -34,10 +43,10 @@ const Carousel = () => {
 
     const responsive = {
         0: {
-            items: 2,
+            items: 4,
         },
         512: {
-            items: 4,
+            items: 5,
         },
     }
 
@@ -46,9 +55,10 @@ const Carousel = () => {
         return (
             <Link
                 key = {coin.id}
+                className={classes.topten}
                 to={`/coins/${coin.id}`}
             >
-                <div>
+                <div >
                     <img 
                         src={coin.image}
                         alt = {coin.name}
@@ -80,7 +90,6 @@ const Carousel = () => {
                     <Typography
                     className={classes.carouselText}
                     >
-                        
                     </Typography>
                 </div>
                 
